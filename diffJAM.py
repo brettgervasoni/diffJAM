@@ -136,17 +136,20 @@ class DiffJAMTab(IMessageEditorTab):
         if previousContentString != "" and content != None:
             a = previousContentString
             b = content.tostring()
+            json = False
 
             #check for json, if so, try and decode it
             #update a if required
             if self.checkForJson(self.previousContent, isRequest):
                 #is json, then decode it
                 a = self.jsonDecode(self.previousContent, isRequest)
+                json = True
 
             #update b if required
             if self.checkForJson(content, isRequest):
                 #is json, then decode it
                 b = self.jsonDecode(content, isRequest)
+                json = True
 
             previousPtr = ''
             threshold = 0
@@ -155,8 +158,11 @@ class DiffJAMTab(IMessageEditorTab):
                 #leaving out '?' lines as they are not required and makes it pretty messy
                 #' ' lines are where the content is the same
                 if line[0] != "?" and line[0] != ' ':
-                    #format line, strip leading/trailing whitespace from line
-                    comparison = comparison+line[0]+" "+line[1:].strip()+"\n"
+                    if json:
+                        comparison = comparison+line[0]+" "+line[0]+"\n"
+                    else:
+                        #format line, strip leading/trailing whitespace from line
+                        comparison = comparison+line[0]+" "+line[1:].strip()+"\n"
 
                     #group lines based on -, + chars
                     if previousPtr != line[0]:
