@@ -26,7 +26,7 @@ menuItems = {
     True:  "Turn off Diff JAM"
 }
 
-_enabled = False
+_enabled = True
 
 class BurpExtender(IBurpExtender, IMessageEditorTabFactory, IContextMenuFactory):
     def registerExtenderCallbacks(self, callbacks):
@@ -58,7 +58,9 @@ class DiffJAMTab(IMessageEditorTab):
         "application/json",
         "text/json",
         "text/x-json",
-        "text/html"
+        "text/html",
+        "text/plain",
+        "application/xml"
     ]
 
     currentContent = ""
@@ -157,11 +159,13 @@ class DiffJAMTab(IMessageEditorTab):
             for line in diff:
                 #leaving out '?' lines as they are not required and makes it pretty messy
                 #' ' lines are where the content is the same
-                if line[0] != "?" and line[0] != ' ':
+                if line[0] != '?' and line[0] != ' ':
                     if json:
-                        comparison = comparison+line[0]+" "+line[0]+"\n"
+                        #keep whitespace if json
+                        comparison = comparison+line+"\n"
                     else:
                         #format line, strip leading/trailing whitespace from line
+                        #the space is required because strip() removes the leading space
                         comparison = comparison+line[0]+" "+line[1:].strip()+"\n"
 
                     #group lines based on -, + chars
