@@ -1,5 +1,5 @@
 # Burp Extension - Diff JAM
-# Brett Gervasoni <brett.gervasoni@nccgroup.com>
+# Brett Gervasoni <brett.gervasoni at nccgroup.com>
 #
 # Adds a new tab to the Response pane of Repeater, which shows the differences
 # in the previous and current response.
@@ -110,7 +110,8 @@ class DiffJAMTab(IMessageEditorTab):
             self.currentContent = content
 
         #otherwise, check if its a supported content-type
-        if isRequest == False and self._editable == False:
+        #if isRequest == False and self._editable == False: #only responses
+        if self._editable == False: #requests, and responses
             #check content-type header
             r = self._helpers.analyzeResponse(content)
             for header in r.getHeaders():
@@ -120,6 +121,8 @@ class DiffJAMTab(IMessageEditorTab):
                     for allowedType in self.supportedContentTypes:
                         if contentType.find(allowedType) > 0:
                             return True
+                else: #if no content-typoe present, enable it anyway
+                    return True
 
             #if the content-type is invalid, check for magic chars, as it will be comparable
             if self.checkForJson(content, isRequest):
@@ -220,14 +223,16 @@ class DiffJAMTab(IMessageEditorTab):
             print("Sure this is JSON?")
             return
 
-        garbage = msg[:boundary]
+        #garbage = msg[:boundary]
         clean = msg[boundary:]
 
         try:
-            pretty_msg = garbage.strip() + '\n' + json.dumps(json.loads(clean), indent=4)
+            #pretty_msg = garbage.strip() + '\n' + json.dumps(json.loads(clean), indent=4)
+            pretty_msg = json.dumps(json.loads(clean), indent=4)
         except:
             print("Problem parsing data in response body")
-            pretty_msg = garbage + clean
+            #pretty_msg = garbage + clean
+            pretty_msg = clean
 
         #add in headers
         headers = ""
