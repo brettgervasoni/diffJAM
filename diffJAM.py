@@ -1,5 +1,5 @@
 # Burp Extension - Diff JAM
-# Brett Gervasoni <brett.gervasoni at nccgroup.com>
+# Brett Gervasoni <brett.gervasoni at ansarada.com>
 #
 # Adds a new tab to the Response pane of Repeater, which shows the differences
 # in the previous and current response.
