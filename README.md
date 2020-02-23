@@ -5,4 +5,4 @@ A new context menu entry is also created to manually turn on, or off the extensi
 
 Note: The extension is turned on by default. To turn off, right click a IMessageEditor pane and turn off.
 
-Brett Gervasoni, NCC Group.
+Brett Gervasoni.
